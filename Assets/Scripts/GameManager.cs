@@ -90,6 +90,8 @@ public class GameManager : MonoBehaviour
                 mainCamera.transform.position = new Vector3(0, 10, -10);
                 canvasObj.GetComponent<UIManager>().WaitInit();
                 gameStatus = GameStatus.fighting;
+                mainCamera.transform.eulerAngles = new Vector3(0, 0, 0);
+
                 break;
 
             case GameStatus.fighting:
@@ -145,6 +147,7 @@ public class GameManager : MonoBehaviour
                     gameStatus = GameStatus.ready;
                 }
                 break;
+
         }
     }
 
@@ -252,6 +255,8 @@ public class GameManager : MonoBehaviour
 
     public void BallJudge(string judge)
     {
+        if (ballstatus == BallStatus.avoided) return;
+
         canvasObj.GetComponent<UIManager>().judging(judge);
         ballstatus = BallStatus.avoided;
         startTime = Time.time;

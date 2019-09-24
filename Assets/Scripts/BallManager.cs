@@ -71,6 +71,13 @@ public class BallManager : MonoBehaviour
         Debug.Log(other);
 
 
+        if(other.gameObject.name == "FaulArea")
+        {
+            gamemaster.GetComponent<GameManager>().BallJudge("Faul");
+            judgeF = false;
+
+        }
+
 
         if (judgeF) return;
 
@@ -200,10 +207,10 @@ public class BallManager : MonoBehaviour
         Vector3 vectors = this.GetComponent<Rigidbody>().velocity;
 
         //基準
-        Vector3 answer = new Vector3(0, 180, 0);
+        Vector3 answer = new Vector3(20, 180, 0);
 
         //実際の計算
-        //Vector3 answer = new vector3(Mathf.Atan2(vectors.z, vectors.y),Mathf.Atan2(vectors.x, vectors.z),Mathf.Atan2(vectors.y, vectors.x));
+        //Vector3 answer = new Vector3(Mathf.Atan2(vectors.z, vectors.y),180f + Mathf.Atan2(vectors.x, vectors.z),Mathf.Atan2(vectors.y, vectors.x));
 
         return answer;
     }
