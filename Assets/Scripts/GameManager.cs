@@ -30,17 +30,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public BallStatus ballstatus;
 
 
-    GameObject ballObj;
-    GameObject canvasObj;
-    GameObject[] bat = new GameObject[4];
+    [SerializeField] private GameObject ballObj;
+    [SerializeField] private GameObject canvasObj;
+    [SerializeField] private List<GameObject> bats;
 
 
 
     Camera mainCamera;
 
-
-    //時間計測用の変数
-    private float startTime;
 
 
     //デバッグモードかどうか
@@ -59,15 +56,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-       
-
-        ballObj = GameObject.Find("Ball");
-        canvasObj = GameObject.Find("Canvas");
-        bat[0] = GameObject.Find("bat0");
-        bat[1] = GameObject.Find("bat1");
-        bat[2] = GameObject.Find("bat2");
-        bat[3] = GameObject.Find("bat3");
-
         mainCamera = Camera.main;
 
         IsDebugging = false;
@@ -86,15 +74,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             case GameStatus.ready:
 
-                ballstatus = BallStatus.waiting;
-                mainCamera.transform.position = new Vector3(0, 10, -10);
-                canvasObj.GetComponent<UIManager>().WaitInit();
-                gameStatus = GameStatus.fighting;
+                GameReady();
                 break;
 
             case GameStatus.fighting:
 
-                GameUpdate();
                 BallUpdate();
                 CameraUpdate();
 
@@ -102,7 +86,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
             default:
 
-                Debug.Log("You are an idiot!");
+                Debug.LogError("readyでもfightingでもない状態です。");
 
                 break;
         }
@@ -122,36 +106,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
-
-
-    //ゲーム進行での更新
-    public void GameUpdate()
+    private void GameReady()
     {
-        switch (ballstatus)
-        {
-            //判定が決まってからは数秒後フェードアウトする
-            case BallStatus.avoided:
-
-                //Debug.Log(Time.time - startTime);
-                if(Time.time - startTime > fadeoutTime)
-                {
-                    //フェードアウト処理をする。
-                    ballObj.GetComponent<BallManager>().BallInit();
-                    for (int i = 0; i < 4; i++)
-                    {
-                        bat[i].GetComponent<Swing>().BatInit();
-                    }
-                    ballstatus = BallStatus.waiting;
-                    gameStatus = GameStatus.ready;
-                }
-                break;
-        }
+        ballstatus = BallStatus.waiting;
+        mainCamera.transform.position = new Vector3(0, 10, -10);
+        canvasObj.GetComponent<UIManager>().WaitInit();
+        gameStatus = GameStatus.fighting;
     }
+
+
+
 
     //ボールの情報更新
     public void BallUpdate()
     {
-        
+
         switch (ballstatus)
         {
             case BallStatus.waiting:
@@ -212,9 +181,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             if (Input.GetButtonDown("Reset"))
             {
                 ballObj.GetComponent<BallManager>().BallInit();
-                for (int i = 0; i < 4; i++)
+                foreach (GameObject bat in bats)
                 {
-                    bat[i].GetComponent<Swing>().BatInit();
+                    bat.GetComponent<Swing>().BatInit();
                 }
                 ballstatus = BallStatus.waiting;
             }
@@ -242,7 +211,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     break;
 
                 default:
-                    Debug.Log("You are an idiot!");
+                    Debug.LogError("ボールの状態がわかりません");
                     break;
 
             }
@@ -254,8 +223,27 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         canvasObj.GetComponent<UIManager>().judging(judge);
         ballstatus = BallStatus.avoided;
-        startTime = Time.time;
+        StartCoroutine(FadeOut());
 
+    }
+
+
+    private IEnumerator FadeOut()
+    {
+        yield return new WaitForSeconds(fadeoutTime);
+
+        if (ballstatus == BallStatus.avoided)
+        {
+            //フェードアウト処理をする。
+            ballObj.GetComponent<BallManager>().BallInit();
+            foreach (GameObject bat in bats)
+            {
+                bat.GetComponent<Swing>().BatInit();
+            }
+            ballstatus = BallStatus.waiting;
+            gameStatus = GameStatus.ready;
+
+        }
     }
 
 

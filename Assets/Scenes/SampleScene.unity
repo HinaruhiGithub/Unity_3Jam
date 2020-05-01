@@ -258,6 +258,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballstatus: 0
+  ballObj: {fileID: 1778287852}
+  canvasObj: {fileID: 298050037}
+  bats:
+  - {fileID: 440066063}
+  - {fileID: 579584249}
+  - {fileID: 1566973584}
+  - {fileID: 1077218523}
   IsDebugging: 0
   throwSize: {x: -6.5, y: -6.5}
 --- !u!4 &56399139
@@ -4038,7 +4045,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 503c08e91b85f6c43a25ddfa5526f625, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamemaster: {fileID: 56399137}
+  gameManager: {fileID: 56399138}
+  faulPanels: {fileID: 1167360064}
+  bats:
+  - {fileID: 440066063}
+  - {fileID: 579584249}
+  - {fileID: 1566973584}
+  - {fileID: 1077218523}
   flyingBaseRadian: 45
   throwspeed: 60
 --- !u!1 &1787024069
