@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     //ゲームモードの状況
     public enum GameStatus
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
             //判定が決まってからは数秒後フェードアウトする
             case BallStatus.avoided:
 
-                Debug.Log(Time.time - startTime);
+                //Debug.Log(Time.time - startTime);
                 if(Time.time - startTime > fadeoutTime)
                 {
                     //フェードアウト処理をする。

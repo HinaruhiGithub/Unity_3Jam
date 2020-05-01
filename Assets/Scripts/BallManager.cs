@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallManager : MonoBehaviour
+public class BallManager : SingletonMonoBehaviour<BallManager>
 {
 
     //GameManagerからgetcomponentで弾の状況を受け取る。
